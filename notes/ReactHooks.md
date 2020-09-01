@@ -271,4 +271,10 @@ useEffect还会返回一个回调函数，这个回调函数的执行时机很�
    从这个例子中可以看出，组件在每一次渲染过程中的state和props都是独立的。
 
 2. useRef()主要是可以在渲染过程中保持状态。也就是说，始终保持着同一个引用。
+
+3. 用法
+   - 语法  
+     `const refContainer = useRef(initialValue);`
+   - `initialValue` 表示初始值，类型可以时字符串，数字等。useRef()是一个可变（mutable）的 `ref` 对象，其中的`current` 属性被初始化为传入的参数（initialValue）。返回的 `ref` 对象在组件的整个生命周期内保持不变。
+   
    
