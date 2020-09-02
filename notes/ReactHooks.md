@@ -275,6 +275,183 @@ useEffect还会返回一个回调函数，这个回调函数的执行时机很�
 3. 用法
    - 语法  
      `const refContainer = useRef(initialValue);`
-   - `initialValue` 表示初始值，类型可以时字符串，数字等。useRef()是一个可变（mutable）的 `ref` 对象，其中的`current` 属性被初始化为传入的参数（initialValue）。返回的 `ref` 对象在组件的整个生命周期内保持不变。
+   - `initialValue` 表示初始值，类型可以时字符串，数字等。useRef()的返回值是一个可变（mutable）的 `ref` 对象，其中的`current` 属性被初始化为传入的参数（initialValue）。返回的 `ref` 对象在组件的整个生命周期内保持不变。
+   - 我们可以使用useRef()来获取一个DOM节点。示例代码如下：
+     ```tsx
+        useEffect(() => {
+            console.log('inputRef', inputRef);
+            if (inputRef && inputRef.current) {
+                // 真正保存input元素的还是current属性
+                inputRef.current.focus();
+            }
+        });
+        // useRef()可以用来获取真实的DOM节点，从而能够对节点进行操作
+        const inputRef = useRef<HTMLInputElement>(null);
+        
+        return (
+         <React.Fragment>
+            {/*
+               获取input元素的ref属性，并将其赋给inputRef，这样inputRef时对input元素的引用，进而可以对其进行DOM操作
+               真正保存input元素的还是current属性
+            */}
+            <input type="text" ref={inputRef} />
+         </React.Fragment> 
+        )
+     ```
+     `inputRef`中的`current`属性指向了`input`元素，并且在整个组件的生命周期内，无论该节点如何改变，`React`都会将`inputRef`对象的`current`属性设置为相应的input元素。
+4. useRef()比`ref`属性更有用。它可以很方便地保存任何可变值，其类似于在`class`中使用实例字段的方式。  
+   这是因为它创建的是一个普通`Javascript`对象。而 useRef()和自建一个`{current: ...}`对象的唯一区别是，useRef()会在每次渲染时返回同一个`ref`对象。
+5. **注意**：当`ref`对象内容发生变化时，useRef()并不会通知你。current属性值的更新不会引发组件重新渲染。
+6. 以上内容来自React中文文档：[useRef](https://react.docschina.org/docs/hooks-reference.html#useref)
+
+### 8. useContext
+
+1. 这个hooks用来简化Context的使用。
+
+2. React组件之间传递数据，传统方式只能是单向单层传递，不能跨组件传递。为了解决这个问题，React提供了Context，使得跨组件传递数据成为可能。
+
+3. Context有两个核心的组件：Provider和Consumer。这两个组件通过React.createContext()生成。
+
+4. createContext()接收一个初始值，返回值是一个对象，这个对象包含了两个属性：Provider和Consumer，也就是上面所说的核心组件。可以使用解构的方式进行接收。示例代码如下：
+   ```tsx
+      const {Provider, Consumer} = React.createContext(initialValue);
+   ```
+5. Provider组件时数据的提供者，通过`value`属性接收存储的公共状态，来传递给子组件或后代组件。示例：
+   ```tsx
+      <Provider value={val}>
+           <childComponent />
+      </Provider> 
+   ```
+   Provider组件一般用在需要向子组件或者后代组件传递数据的地方。可以放在根组件中。要传递的数值放在`value`属性中。
+
+6. Consumer组件是数据的消费者，通过订阅Provider传入的context的值，来实时更新当前组件的状态。示例：
+   ```tsx
+      <Consumer>
+           {
+               value => (
+                   <h1>Consumer: {value}</h1>
+               )
+           }
+      </Consumer>
+   ```
+   Consumer组件中不能直接渲染一个组件，而是要声明一个函数，函数接收的参数就是context值，函数的返回值就是我们需要渲染的组件。
    
+7. 下面的代码完整的展示了Context的用法：
+   ```tsx
+      // hello.tsx
+      import React from 'react';
    
+      import Middle from './middle';
+      export const { Provider, Consumer } = React.createContext(0);
+      
+      const Hello: React.FC = () => {
+          return (
+              <React.Fragment>
+                  <Provider value={60}>
+                      <Middle />
+                  </Provider>
+              </React.Fragment>
+          );
+      };  
+      export default Hello;
+   
+      // middle.tsx
+      import React from 'react'; 
+      import Leaf from './leaf';
+      
+      const Middle: React.FC = () => {
+          return (
+              <React.Fragment>
+                  <Leaf />
+              </React.Fragment>
+          );
+      };  
+      export default Middle;
+   
+      // leaf.tsx
+      import React from 'react'; 
+      import { Consumer } from './hello';
+      
+      const Leaf: React.FC = () => {
+          return (
+              <React.Fragment>
+                  <Consumer>{value => <h1>battery: {value}</h1>}</Consumer>
+              </React.Fragment>
+          );
+      };   
+      export default Leaf;
+   ```
+   渲染结果：  
+   ![](./img/context.jpg)
+     
+   Context确实实现了跨级通信。Provider组件的value属性，接收公共的数据。在需要接收数据的后代组件处，引入Consumer组件。在Consumer组件内，使用函数生成一个真正被渲染的组件。
+8. Context参考资料：
+   - [React系列——React Context](https://segmentfault.com/a/1190000017758300)
+   - [React的Context的使用方法简介](https://www.cnblogs.com/littleSpill/p/11221538.html)
+8. 从上面的Context的用法可以看出，后代组件想使用Consumer组件比较麻烦。使用useContext()可以简化这一步。
+
+9. 用法
+   - 语法  
+     `const value = useContext(MyContext);`
+   - 说明：`MyContext`是Context对象，也就是直接由`React.createContext()`生成的那个对象。value是当前Context的值。**注意**：当前的 Context 值由上层组件中距离当前组件最近的`<MyContext.Provider>` 的`value`决定。
+   - 当组件上层最近的`<MyContext.Provider>`更新时，该Hook会触发重渲染，并使用最新传递给`<MyContext.Provider>`的value的值。
+
+10. **注意**：useContext()接收的一定是Context对象，也就是直接由`React.createContext()`生成的那个对象。不是Provider也不是Consumer。
+
+11. `useContext(MyContext)`只是让我们能获取Context的值以及订阅 Context的变化。我们仍然需要在上层组件树中使用`<MyContext.Provider>`来为下层组件提供Context。
+
+12. 下面的代码展示了useContext()的用法：
+    ```tsx
+       // App.tsx
+       import React from 'react';
+       import Hello from './components/hello';
+    
+       interface IThemeProps {
+           [key: string]: { color: string; background: string };
+       }
+       
+       const themes: IThemeProps = {
+           light: {
+               color: '#000',
+               background: '#eee',
+           },
+           dark: {
+               color: '#fff',
+               background: '#222',
+           },
+       };
+       
+       // 创建一个context，并传入初始值
+       export const themeContext = React.createContext(themes.light);
+       const App: React.FC = () => {
+           return (
+               <themeContext.Provider value={themes.dark}>
+                   <div className="App">
+                       <Hello />
+                   </div>
+               </themeContext.Provider>
+               );
+       }
+    
+       // hello.tsx
+       import React, { useContext } from 'react';
+       // 从App组件中引入Context对象
+       import { themeContext } from '../App';    
+    
+       const Hello: React.FC = () => {
+           // useContext()接收一个Context对象作为参数
+           // useContext()返回的是Context的值，也就是Provider组件的value的值
+           const theme = useContext(themeContext);
+           const style = {
+               color: theme.color,
+               background: theme.background,
+           };
+           return (
+               <React.Fragment>
+                   <h2 style={style}>Hello World</h2>
+               </React.Fragment>
+           );
+       };
+       export default Hello;
+    ```
+    需要使用哪个组件中的Context对象，我们就从哪个组件中导入这个Context对象，然后作为参数传入useContext()中。
