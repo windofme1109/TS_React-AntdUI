@@ -4,10 +4,30 @@ import MouseTracker from './components/mouseTracker';
 import useMousePosition from './hooks/useMousePosition';
 import useUrlLoader from './hooks/useUrlLoader';
 
+import Hello from './components/hello';
+
 interface IShowResult {
     message: string;
     status: string;
 }
+
+interface IThemeProps {
+    [key: string]: { color: string; background: string };
+}
+
+const themes: IThemeProps = {
+    light: {
+        color: '#000',
+        background: '#eee',
+    },
+    dark: {
+        color: '#fff',
+        background: '#222',
+    },
+};
+
+// 创建一个context，并传入初始值
+export const themeContext = React.createContext(themes.light);
 
 const App: React.FC = () => {
     // useState()接收一个初始值，返回值是一个数组，使用解构的方法进行接收
@@ -62,6 +82,7 @@ const App: React.FC = () => {
         }
     });
 
+    // 操作DOM节点
     useEffect(() => {
         console.log('inputRef', inputRef);
         if (inputRef && inputRef.current) {
@@ -73,49 +94,52 @@ const App: React.FC = () => {
     // useRef()可以用来获取真实的DOM节点，从而能够对节点进行操作
     const inputRef = useRef<HTMLInputElement>(null);
     return (
-        <div className="App">
-            <div>
-                <h1>hello world</h1>
-                <div>{count}</div>
-                <button
-                    onClick={() => {
-                        setCount(x => x + 1);
-                        // 使用countRef进行操作
-                        countRef.current++;
-                    }}
-                >
-                    add
-                </button>
-                {/*
+        <themeContext.Provider value={themes.dark}>
+            <div className="App">
+                <Hello />
+                <div>
+                    <h1>hello world</h1>
+                    <div>{count}</div>
+                    <button
+                        onClick={() => {
+                            setCount(x => x + 1);
+                            // 使用countRef进行操作
+                            countRef.current++;
+                        }}
+                    >
+                        add
+                    </button>
+                    {/*
                     获取input元素的ref属性，并将其赋给inputRef，这样inputRef时对input元素的引用，进而可以对其进行DOM操作
                     真正保存input元素的还是current属性
                 */}
-                <input type="text" ref={inputRef} />
-                <button onClick={handleAlertClick}>Alert</button>
-                <button onClick={() => setOn(on => !on)}>
-                    {on ? 'ON' : 'OFF'}
-                </button>
+                    <input type="text" ref={inputRef} />
+                    <button onClick={handleAlertClick}>Alert</button>
+                    <button onClick={() => setOn(on => !on)}>
+                        {on ? 'ON' : 'OFF'}
+                    </button>
 
-                {/*<p>*/}
-                {/*    X: {position.x}, Y: {position.y}*/}
-                {/*</p>*/}
+                    {/*<p>*/}
+                    {/*    X: {position.x}, Y: {position.y}*/}
+                    {/*</p>*/}
+                </div>
+                <div>
+                    <button onClick={() => setShow(show => !show)}>
+                        refresh the dog photo
+                    </button>
+                    {show ? <p>123</p> : null}
+                    {loading ? (
+                        <p>正在加载，请稍等</p>
+                    ) : (
+                        <img src={dogResult && dogResult.message} alt="" />
+                    )}
+                </div>
+                {/*<div>*/}
+                {/*    <button onClick={() => setShow(show => !show)}>toggle</button>*/}
+                {/*    {show ? <MouseTracker /> : null}*/}
+                {/*</div>*/}
             </div>
-            <div>
-                <button onClick={() => setShow(show => !show)}>
-                    refresh the dog photo
-                </button>
-                {show ? <p>123</p> : null}
-                {loading ? (
-                    <p>正在加载，请稍等</p>
-                ) : (
-                    <img src={dogResult && dogResult.message} alt="" />
-                )}
-            </div>
-            {/*<div>*/}
-            {/*    <button onClick={() => setShow(show => !show)}>toggle</button>*/}
-            {/*    {show ? <MouseTracker /> : null}*/}
-            {/*</div>*/}
-        </div>
+        </themeContext.Provider>
     );
 };
 
