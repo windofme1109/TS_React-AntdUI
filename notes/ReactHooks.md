@@ -19,7 +19,9 @@
 1. [react hooks 使用](https://segmentfault.com/a/1190000019513907)
 2. [React Hooks](https://blog.csdn.net/sinat_17775997/article/details/84794837)
 3. [React Hooks 深入不浅出](https://segmentfault.com/a/1190000017182184)
-
+4. 介绍了很多有用的第三方hooks：[useHooks](https://usehooks.com/)
+5. 中文文档：[Hook API 索引](https://react.docschina.org/docs/hooks-reference.html)
+6. 英文文档：[Hooks API Reference](https://reactjs.org/docs/hooks-reference.html)
 ### 3. 类组件的缺点
 - 状态逻辑复用难
   - 缺少复用机制
@@ -37,7 +39,12 @@
   - 自定义Hooks方便复用状态逻辑
   - 副作用的关注点分离
   
-### 5. useState
+### 5. Hook规则
+
+1. 只在最顶层调用hook函数，不能再for、if、 try等内部使用。
+2. 只在React函数中调用hook函数，不能再普通的JavaScript函数中调用hook。
+
+### 6. useState
 
 1. state hook 提供了一种可以在 function component 中添加状态的方式。通过 state hook，可以抽取状态逻辑，使组件变得可测试，可重用。开发者可以在不改变组件层次结构的情况下，去重用状态逻辑。更好的实现关注点分离。  
 
@@ -90,7 +97,7 @@
       export default App;
    ```
     
-### 6. useEffect
+### 7. useEffect
 
 1. 数据获取，设置订阅，手动的更改 DOM，都可以称为副作用，可以将副作用分为两种，一种是需要清理的，另外一种是不需要清理的。比如网络请求，DOM 更改，日志这些副作用都不要清理。而比如定时器，事件监听，则需要清理。
 
@@ -161,7 +168,7 @@ useEffect还会返回一个回调函数，这个回调函数的执行时机很�
      ```
      通过count来控制useEffect()的调用时机。
      
-### 7. 自定义hooks
+### 8. 自定义hooks
 
 1. 自定义的hooks以`use`开头。
 
@@ -242,7 +249,7 @@ useEffect还会返回一个回调函数，这个回调函数的执行时机很�
    
 6. 使用自定义hooks，我们就可以将一些公共逻辑放在自定义的hooks中，引用自定义的hooks就像引用函数一样，从里面拿出数据，然后进行渲染。还可以根据不同的组件向自定义hooks传入不同的参数，进而得到不同的数据。极大地提高了组件的灵活性和复用性。
 
-### 7. useRef
+### 9. useRef
 
 1. 函数组件在渲染过程中，每一次的state和props都是相互独立的。示例代码：
    ```tsx  
@@ -299,12 +306,16 @@ useEffect还会返回一个回调函数，这个回调函数的执行时机很�
         )
      ```
      `inputRef`中的`current`属性指向了`input`元素，并且在整个组件的生命周期内，无论该节点如何改变，`React`都会将`inputRef`对象的`current`属性设置为相应的input元素。
-4. useRef()比`ref`属性更有用。它可以很方便地保存任何可变值，其类似于在`class`中使用实例字段的方式。  
+     
+4. useRef()比`ref`属性更有用。它可以很方便地保存任何可变值，其类似于在`class`中使用实例字段的方式。 
+ 
    这是因为它创建的是一个普通`Javascript`对象。而 useRef()和自建一个`{current: ...}`对象的唯一区别是，useRef()会在每次渲染时返回同一个`ref`对象。
+   
 5. **注意**：当`ref`对象内容发生变化时，useRef()并不会通知你。current属性值的更新不会引发组件重新渲染。
+
 6. 以上内容来自React中文文档：[useRef](https://react.docschina.org/docs/hooks-reference.html#useref)
 
-### 8. useContext
+### 10. useContext
 
 1. 这个hooks用来简化Context的使用。
 
@@ -388,6 +399,7 @@ useEffect还会返回一个回调函数，这个回调函数的执行时机很�
 8. Context参考资料：
    - [React系列——React Context](https://segmentfault.com/a/1190000017758300)
    - [React的Context的使用方法简介](https://www.cnblogs.com/littleSpill/p/11221538.html)
+   
 8. 从上面的Context的用法可以看出，后代组件想使用Consumer组件比较麻烦。使用useContext()可以简化这一步。
 
 9. 用法
