@@ -1,0 +1,37 @@
+@mixin button-size($padding-x, $padding-y, $font-size, $border-radius) {
+    padding: $padding-y $padding-x;
+    font-size: $font-size;
+    border-radius: $border-radius;
+}
+
+@mixin button-style(
+    $background,
+    $border,
+    $color,
+    // 下面这三个参数，设置了默认值
+    // scss的内置函数，作用是：让某个颜色变浅
+    $hover-background: lighten($background, 7.5%),
+    $hover-border: lighten($border, 10%),
+    $hover-color: $color
+) {
+    color: $color;
+    background: $background;
+    border-color: $border;
+    &:hover {
+        color: $hover-color;
+        background: $hover-background;
+        border-color: $border;
+    }
+    &:focus,
+    &.focus {
+        color: $hover-color;
+        background: $hover-background;
+        border-color: $border;
+    }
+    &:disabled,
+    &.disabled {
+        color: $color;
+        background: $background;
+        border-color: $border;
+    }
+}
