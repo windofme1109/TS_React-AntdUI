@@ -4,10 +4,14 @@
 
 - [1. 什么是Hook？](#1-%E4%BB%80%E4%B9%88%E6%98%AFhook)
 - [2. 参考资料](#2-%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99)
-- [2. 类组件的缺点](#2-%E7%B1%BB%E7%BB%84%E4%BB%B6%E7%9A%84%E7%BC%BA%E7%82%B9)
-- [3. Hooks优势](#3-hooks%E4%BC%98%E5%8A%BF)
-- [4. useState](#4-usestate)
-- [5. useEffect](#5-useeffect)
+- [3. 类组件的缺点](#3-%E7%B1%BB%E7%BB%84%E4%BB%B6%E7%9A%84%E7%BC%BA%E7%82%B9)
+- [4. Hooks优势](#4-hooks%E4%BC%98%E5%8A%BF)
+- [5. Hook规则](#5-hook%E8%A7%84%E5%88%99)
+- [6. useState](#6-usestate)
+- [7. useEffect](#7-useeffect)
+- [8. 自定义hooks](#8-%E8%87%AA%E5%AE%9A%E4%B9%89hooks)
+- [9. useRef](#9-useref)
+- [10. useContext](#10-usecontext)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
