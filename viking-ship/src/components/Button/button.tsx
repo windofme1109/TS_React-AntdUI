@@ -36,9 +36,9 @@ type NativeAnchorProps = BaseButtonProps & React.AnchorHTMLAttributes<HTMLAnchor
 // 类型映射 —— Partial
 // 将NativeAnchorProps与NativeButtonProps合并为一个类型
 // 并使用Partial，将其所有的属性指定为可选，因为使用过程中，不一定会传入所有属性
-export type ButtonTypes = Partial<NativeAnchorProps & NativeButtonProps>;
+export type ButtonProps = Partial<NativeAnchorProps & NativeButtonProps>;
 
-const Button: React.FC<ButtonTypes> = (props) => {
+const Button: React.FC<ButtonProps> = (props) => {
     const {
         size,
         className,
