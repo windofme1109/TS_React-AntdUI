@@ -1,4 +1,4 @@
-import React, {createContext} from 'react';
+import React, {useState, createContext} from 'react';
 import classNames from 'classnames';
 
 // type关键字定义字符串字面量，达到枚举的效果
@@ -22,7 +22,8 @@ interface IMenuContext {
     onSelected?: SelectedCallback
 }
 
-// 定义Context
+// 定义 Context
+// 创建这个 Context 的目的是将当前的处于激活状态的标签的索引以及回调函数传递到子组件中
 export const MenuContext = createContext<IMenuContext>({
     index: 0
 })
@@ -30,6 +31,22 @@ export const MenuContext = createContext<IMenuContext>({
 const Menu: React.FC<MenuProps> = (props) => {
 
     const {defaultIndex, className, mode, style, onSelected, children} = props;
+    // currentActive表示当前选中的标签，统一放到Menu组件中进行管理
+    const [currentActive, setActive] = useState(defaultIndex);
+
+
+    const handleClick = (index: number) => {
+        setActive(index);
+
+        if (onSelected) {
+            onSelected(index);
+        }
+    }
+
+    const passedContext: IMenuContext = {
+        index: currentActive ? currentActive : 0,
+        onSelected: handleClick
+    }
 
     // 添加class
     // classNames()接收的是多个参数，可以是字符串或者是对象，对象的 key 就是要添加的 class
@@ -40,9 +57,12 @@ const Menu: React.FC<MenuProps> = (props) => {
     })
     return (
         <ul className={classes} style={style}>
-            {
-                children
-            }
+            <MenuContext.Provider value={passedContext}>
+                {
+                    children
+                }
+            </MenuContext.Provider>
+
         </ul>
     )
 

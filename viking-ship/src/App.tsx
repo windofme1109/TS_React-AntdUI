@@ -3,6 +3,7 @@ import React from 'react';
 import Button, {ButtonSize, ButtonType} from './components/Button/button'
 import Menu from './components/Menu/menu'
 import MenuItem from './components/Menu/menuItem'
+import {DragSortingTable} from './components/dragSortingTable/dragSortingTable'
 
 import './styles/index.scss';
 
@@ -11,14 +12,14 @@ function App() {
         <React.Fragment>
             <div className="App">
 
-                <Menu defaultIndex={0}>
-                    <MenuItem index={1}>
+                <Menu defaultIndex={0} onSelected={(index) => console.log(index)}>
+                    <MenuItem index={0}>
+                        cool link
+                    </MenuItem>
+                    <MenuItem index={1} disabled>
                         cool link
                     </MenuItem>
                     <MenuItem index={2}>
-                        cool link
-                    </MenuItem>
-                    <MenuItem index={3}>
                         cool link
                     </MenuItem>
                 </Menu>
@@ -37,6 +38,8 @@ function App() {
             </div>
             <div>
                 <a href="#">click</a>
+
+                <DragSortingTable />
             </div>
         </React.Fragment>
     );
