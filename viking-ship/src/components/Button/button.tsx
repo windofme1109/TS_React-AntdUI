@@ -49,7 +49,10 @@ const Button: React.FC<ButtonProps> = (props) => {
         ...restProps
 
     } = props;
-    const classes = classNames('btn',className, {
+    // classNames()接收的是多个参数，可以是字符串或者是对象，对象的 key 就是要添加的 class
+    // 而 value 是布尔值，true 表示这个 key 会被添加到 class 列表中，而 false 表示 key 不会被添加到 class 列表中
+    // {'bat': true, 'baz': true, 'ccc': false}，输出 'bat baz'
+    const classes = classNames('btn', className, {
         [`btn-${size}`]: size,
         [`btn-${btnType}`]: btnType,
         // 在按钮类型是链接（link）的时候，disabled才能起作用
