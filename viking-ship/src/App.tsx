@@ -1,7 +1,8 @@
 import React from 'react';
 
 import Button, {ButtonSize, ButtonType} from './components/Button/button'
-
+import Menu from './components/Menu/menu'
+import MenuItem from './components/Menu/menuItem'
 
 import './styles/index.scss';
 
@@ -9,6 +10,19 @@ function App() {
     return (
         <React.Fragment>
             <div className="App">
+
+                <Menu defaultIndex={0}>
+                    <MenuItem index={1}>
+                        cool link
+                    </MenuItem>
+                    <MenuItem index={2}>
+                        cool link
+                    </MenuItem>
+                    <MenuItem index={3}>
+                        cool link
+                    </MenuItem>
+                </Menu>
+
                 <h1>hello world</h1>
                 <h2>hello world</h2>
                 <h3>hello world</h3>
