@@ -1,11 +1,10 @@
 import React from 'react';
 
-import TaskFlowConfig from './components/add'
+
 
 import Button, {ButtonSize, ButtonType} from './components/Button/button'
 import Menu from './components/Menu/menu'
 import MenuItem from './components/Menu/menuItem'
-import {DragSortingTable} from './components/dragSortingTable/dragSortingTable'
 
 import './styles/index.scss';
 
@@ -15,7 +14,6 @@ function App() {
 
 
 
-            {/*<TaskFlowConfig />*/}
                 <Menu defaultIndex={0} mode={'vertical'}>
                     <MenuItem index={0}>
                         cool link
