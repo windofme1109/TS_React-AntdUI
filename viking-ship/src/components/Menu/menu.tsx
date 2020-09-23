@@ -21,7 +21,8 @@ export interface MenuProps {
 // 定义 context 的类型
 interface IMenuContext {
     index: number;
-    onSelected?: SelectedCallback
+    onSelected?: SelectedCallback,
+    mode?: MenuModel
 }
 
 // 定义 Context
@@ -48,7 +49,8 @@ const Menu: React.FC<MenuProps> = (props) => {
 
     const passedContext: IMenuContext = {
         index: currentActive ? currentActive : 0,
-        onSelected: handleClick
+        onSelected: handleClick,
+        mode: 'horizontal'
     }
 
     // 添加class
@@ -56,7 +58,9 @@ const Menu: React.FC<MenuProps> = (props) => {
     // 而 value 是布尔值，true 表示这个 key 会被添加到 class 列表中，而 false 表示 key 不会被添加到 class 列表中
     // {'bat': true, 'baz': true, 'ccc': false}，输出 'bat baz'
     const classes = classNames('viking-menu', className, {
-        'menu-vertical': mode === 'vertical'
+        'menu-vertical': mode === 'vertical',
+
+        'menu-horizonal': mode !== 'vertical'
     })
 
 
@@ -76,7 +80,7 @@ const Menu: React.FC<MenuProps> = (props) => {
             const childElement = child as React.FunctionComponentElement<MenuItemProps>;
             // type 属性包含了 React.FunctionComponentElement 上面的属性，包括displayName
             const {displayName} = childElement.type;
-            if (displayName === 'MenuItem') {
+            if (displayName === 'MenuItem' || displayName === 'SubMenu') {
                 // cloneElement(element, [props], [...children]) 方法以 element 元素为样板克隆并返回新的 React 元素。
                 // 返回元素的 props 是将新的 props 与原始元素的 props 浅层合并后的结果。
                 // 新的子元素将取代现有的子元素，而来自原始元素的 key 和 ref 将被保留
