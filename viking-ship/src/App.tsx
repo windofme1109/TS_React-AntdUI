@@ -1,7 +1,5 @@
 import React from 'react';
 
-
-
 import Button, {ButtonSize, ButtonType} from './components/Button/button'
 import Menu from './components/Menu/menu'
 import MenuItem from './components/Menu/menuItem'
@@ -12,16 +10,14 @@ function App() {
     return (
         <React.Fragment>
 
-
-
-                <Menu defaultIndex={0} mode={'vertical'}>
+                <Menu mode={'vertical'}>
                     <MenuItem index={0}>
                         cool link
                     </MenuItem>
-                    <MenuItem index={1} disabled={true}>
+                    <MenuItem disabled={true}>
                         cool link
                     </MenuItem>
-                    <MenuItem index={2}>
+                    <MenuItem>
                         cool link
                     </MenuItem>
                 </Menu>

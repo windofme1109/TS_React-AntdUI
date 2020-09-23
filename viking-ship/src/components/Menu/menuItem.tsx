@@ -2,8 +2,8 @@ import React, {useContext} from 'react';
 import classNames from 'classnames';
 
 import {MenuContext} from './menu';
-interface MenuItemProps {
-    index: number;
+export interface MenuItemProps {
+    index?: number;
     disabled?: boolean;
     className?: string;
     style?: React.CSSProperties
@@ -20,20 +20,22 @@ const MenuItem: React.FC<MenuItemProps> = (props) => {
     })
 
     const handleClick = () => {
-        if (!disabled && context.onSelected) {
+        if (!disabled && context.onSelected && typeof index === 'number') {
             context.onSelected(index);
         }
     }
 
     return (
 
-        <ul className={classes} style={style} onClick={handleClick}>
+        <li className={classes} style={style} onClick={handleClick}>
             {
                 children
             }
-        </ul>
+        </li>
     )
 
 }
 
+// displayName 是 React 的一个内置属性，可以作为组件的标识
+MenuItem.displayName = 'MenuItem';
 export default MenuItem;
