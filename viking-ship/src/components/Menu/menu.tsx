@@ -50,7 +50,7 @@ const Menu: React.FC<MenuProps> = (props) => {
     const passedContext: IMenuContext = {
         index: currentActive ? currentActive : 0,
         onSelected: handleClick,
-        mode: 'horizontal'
+        mode: mode
     }
 
     // 添加class
@@ -60,7 +60,7 @@ const Menu: React.FC<MenuProps> = (props) => {
     const classes = classNames('viking-menu', className, {
         'menu-vertical': mode === 'vertical',
 
-        'menu-horizonal': mode !== 'vertical'
+        'menu-horizontal': mode !== 'vertical'
     })
 
 
