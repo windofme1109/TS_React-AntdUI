@@ -1,6 +1,5 @@
 import React from 'react';
 
-import Button, {ButtonSize, ButtonType} from './components/Button/button'
 import Menu from './components/Menu/menu'
 import MenuItem from './components/Menu/menuItem'
 import SubMenu from './components/Menu/subMenu'
@@ -10,7 +9,7 @@ function App() {
     return (
         <React.Fragment>
 
-                <Menu mode={"vertical"} onSelected={(index) => alert(index)}>
+                <Menu defaultIndex={'0'} mode={"vertical"} onSelected={(index) => alert(index)} defaultOpenSubMenus={['1']}>
                     <MenuItem>
                         cool link
                     </MenuItem>

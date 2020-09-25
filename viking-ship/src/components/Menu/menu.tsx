@@ -8,37 +8,43 @@ import {MenuItemProps} from './menuItem'
 type MenuModel = 'horizontal' | 'vertical';
 
 // 定义选中后的回调函数，接收SelectedIndex，也就是选中后的列表项的索引
-type SelectedCallback = (selectedIndex: number) => void
+type SelectedCallback = (selectedIndex: string) => void
 export interface MenuProps {
-    defaultIndex?: number;
+    // 将默认的 defaultIndex 属性设置为 string，这样可以拼接设置 Menu 组件的 index
+    defaultIndex?: string;
     className?: string;
     mode?: MenuModel;
     // 自定义组件样式，类型是React提供的CSSProperties
     style?: React.CSSProperties;
-    onSelected?: SelectedCallback
+    onSelected?: SelectedCallback;
+    // 在垂直状态下，默认打开 SubMenu 子列表
+    // 所以我们要判断有哪些 SubMenu，由于 SubMenu 数量不确定
+    // 所以这里使用数组接收，接收的数据类型是 string，因为 SubMenu 的 index 是 string 类型
+    defaultOpenSubMenus?: string[];
 }
 
 // 定义 context 的类型
 interface IMenuContext {
-    index: number;
+    index: string;
     onSelected?: SelectedCallback,
-    mode?: MenuModel
+    mode?: MenuModel,
+    defaultOpenSubMenus?: string[];
 }
 
 // 定义 Context
 // 创建这个 Context 的目的是将当前的处于激活状态的标签的索引以及回调函数传递到子组件中
 export const MenuContext = createContext<IMenuContext>({
-    index: 0
+    index: '0'
 })
 
 const Menu: React.FC<MenuProps> = (props) => {
 
-    const {defaultIndex, className, mode, style, onSelected, children} = props;
+    const {defaultIndex, className, mode, style, onSelected, children, defaultOpenSubMenus} = props;
     // currentActive表示当前选中的标签，统一放到Menu组件中进行管理
     const [currentActive, setActive] = useState(defaultIndex);
 
 
-    const handleClick = (index: number) => {
+    const handleClick = (index: string) => {
         setActive(index);
         console.log('index', index);
         if (onSelected) {
@@ -48,9 +54,10 @@ const Menu: React.FC<MenuProps> = (props) => {
     }
 
     const passedContext: IMenuContext = {
-        index: currentActive ? currentActive : 0,
+        index: currentActive ? currentActive : '0',
         onSelected: handleClick,
-        mode: mode
+        mode: mode,
+        defaultOpenSubMenus
     }
 
     // 添加class
@@ -88,7 +95,7 @@ const Menu: React.FC<MenuProps> = (props) => {
                 // 简单的说，就是将 每一个子元素复制一份，并向其 props 添加一个 index 属性
                 // 这样可以保证子元素的 index 是连续的，同时还可以自动传入index，（这个index的值就是map() 回调函数的的第二个参数 —— index）
                 return React.cloneElement(childElement, {
-                    index: childIndex
+                    index: childIndex.toString()
                 })
             } else {
                 console.error('warning: Menu has a child which is not a MenuItem Component');
@@ -111,8 +118,9 @@ const Menu: React.FC<MenuProps> = (props) => {
 
 // 添加默认属性
 Menu.defaultProps = {
-    defaultIndex: 0,
-    mode: "horizontal"
+    defaultIndex: '0',
+    mode: "horizontal",
+    defaultOpenSubMenus: []
 }
 
 export default Menu;

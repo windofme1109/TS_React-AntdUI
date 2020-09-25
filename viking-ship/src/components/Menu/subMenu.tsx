@@ -7,14 +7,25 @@ import {render} from "react-dom";
 
 
 interface SubMenuProps {
-    index?: number;
+    index?: string;
     title: string;
     className?: string
 }
 
 const SubMenu: React.FC<SubMenuProps> = ({index, title, children, className}) => {
 
-    const [menuOpen, setOpen] = useState(false);
+    const context = useContext(MenuContext);
+    // defaultOpenSubMenus 为空数组，内部的元素类型不确定，我们这里将其断言为 Array<string>
+    // 保证数组内元素的类型为string
+    const openSubMenu = context.defaultOpenSubMenus as Array<string>;
+
+    // 在垂直状态下，默认打开 SubMenu 子列表
+    // 这里判断：index 存在，且模式为 vertical，
+    // 然后我们去判断 openSubMenu 中，是否存在这个index（当前的SubMenu 的 index）
+    // 存在就返回 true，不存在返回 false
+    const isOpened = (index && context.mode === 'vertical') ? openSubMenu.includes(index) : false;
+
+    const [menuOpen, setOpen] = useState(isOpened);
 
     const handleClick = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -34,7 +45,7 @@ const SubMenu: React.FC<SubMenuProps> = ({index, title, children, className}) =>
 
 
 
-    const context = useContext(MenuContext);
+
     // 垂直模式下，必须点击才能打开下拉菜单
     const clicksEvents = context.mode === 'vertical' ? {
         onClick: handleClick
@@ -61,12 +72,14 @@ const SubMenu: React.FC<SubMenuProps> = ({index, title, children, className}) =>
         const subMenuClasses = classNames('viking-submenu', {
             'menu-opened': menuOpen
         })
-
-        const childElement = React.Children.map(children, (child, index) => {
+        console.log('ndex', index);
+        const childElement = React.Children.map(children, (child, i) => {
             const childElement = child as React.FunctionComponentElement<MenuItemProps>;
-
+            console.log('childIndex', i);
             if (childElement.type.displayName === 'MenuItem') {
-                return childElement;
+                return React.cloneElement(childElement, {
+                    index: `${index}-${i}`
+                })
             } else {
                 console.error('Warning: SubMenu has a child which is not a MenuItem Component')
             }
