@@ -9,7 +9,7 @@ function App() {
     return (
         <React.Fragment>
 
-                <Menu defaultIndex={'0'} mode={"vertical"} onSelected={(index) => alert(index)} defaultOpenSubMenus={['1']}>
+                <Menu defaultIndex={'0'} mode={'vertical'} onSelected={(index) => alert(index)} defaultOpenSubMenus={['1']}>
                     <MenuItem>
                         cool link
                     </MenuItem>

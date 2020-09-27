@@ -72,10 +72,8 @@ const SubMenu: React.FC<SubMenuProps> = ({index, title, children, className}) =>
         const subMenuClasses = classNames('viking-submenu', {
             'menu-opened': menuOpen
         })
-        console.log('ndex', index);
         const childElement = React.Children.map(children, (child, i) => {
             const childElement = child as React.FunctionComponentElement<MenuItemProps>;
-            console.log('childIndex', i);
             if (childElement.type.displayName === 'MenuItem') {
                 return React.cloneElement(childElement, {
                     index: `${index}-${i}`
