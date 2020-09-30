@@ -4,7 +4,7 @@ import {library} from '@fortawesome/fontawesome-svg-core';
 import {fas} from '@fortawesome/free-solid-svg-icons';
 import {CSSTransition} from 'react-transition-group';
 
-
+import Transition from '../Transition/transition'
 import {MenuContext} from './menu';
 import {MenuItemProps} from './menuItem';
 
@@ -96,19 +96,17 @@ const SubMenu: React.FC<SubMenuProps> = ({index, title, children, className}) =>
         })
 
         return (
-            <CSSTransition
+            <Transition
                 in={menuOpen}
-                timeout={300}
-                classNames="zoom-in-top"
-                appear
-                
+                timeout={400}
+                animation="zoom-in-bottom"
             >
             <ul className={subMenuClasses}>
                 {
                     childElement
                 }
             </ul>
-            </CSSTransition>
+            </Transition>
         )
     }
 

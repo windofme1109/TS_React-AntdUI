@@ -4,7 +4,7 @@
 // layout
 @import './reboot';
 
-@import './animation';
+
 
 // button
 @import '../components/Button/style';
@@ -14,5 +14,7 @@
 
 @import './mixins';
 
+// 动画
+@import './animation';
 // icon
 @import '../components/Icon/style';
