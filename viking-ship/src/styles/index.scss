@@ -4,6 +4,8 @@
 // layout
 @import './reboot';
 
+@import './animation';
+
 // button
 @import '../components/Button/style';
 
@@ -11,3 +13,6 @@
 @import '../components/Menu/style';
 
 @import './mixins';
+
+// icon
+@import '../components/Icon/style';

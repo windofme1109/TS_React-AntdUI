@@ -1,10 +1,20 @@
 import React, {useContext, useState} from 'react';
 import classNames from 'classnames';
+import {library} from '@fortawesome/fontawesome-svg-core';
+import {fas} from '@fortawesome/free-solid-svg-icons';
+import {CSSTransition} from 'react-transition-group';
+
 
 import {MenuContext} from './menu';
 import {MenuItemProps} from './menuItem';
-import {render} from "react-dom";
 
+import Icon from '../Icon/icon'
+
+// 从 @fortawesome/free-solid-svg-icons 引入所有的图标：fas （所有图标的集合）
+// 将 fas 添加到 library 中
+// 这样做的的好处就是，我们没有必要将手动从 @fortawesome/free-solid-svg-icons 引入每个图标
+// 使用字符串的方式，即可使用图标
+library.add(fas);
 
 interface SubMenuProps {
     index?: string;
@@ -64,7 +74,9 @@ const SubMenu: React.FC<SubMenuProps> = ({index, title, children, className}) =>
     } : {};
 
     const classes = classNames('menu-item', 'submenu-item', className, {
-        'is-active': context.index === index
+        'is-active': context.index === index,
+        'is-opened': menuOpen,
+        'is-vertical': context.mode === 'vertical',
     })
 
     const renderChildren = () => {
@@ -84,11 +96,19 @@ const SubMenu: React.FC<SubMenuProps> = ({index, title, children, className}) =>
         })
 
         return (
+            <CSSTransition
+                in={menuOpen}
+                timeout={300}
+                classNames="zoom-in-top"
+                appear
+                
+            >
             <ul className={subMenuClasses}>
                 {
                     childElement
                 }
             </ul>
+            </CSSTransition>
         )
     }
 
@@ -96,6 +116,7 @@ const SubMenu: React.FC<SubMenuProps> = ({index, title, children, className}) =>
         <li key={index} className={classes} {...hoverEvent}>
             <div className="submenu-title" {...clicksEvents}>
                 {title}
+                <Icon icon="angle-down" className="arrow-icon" />
             </div>
             {renderChildren()}
         </li>
