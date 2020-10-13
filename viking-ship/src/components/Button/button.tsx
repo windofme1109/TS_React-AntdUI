@@ -2,18 +2,23 @@ import React, {ReactHTMLElement} from 'react';
 import classNames from 'classnames';
 
 // 按钮的大小
-export enum ButtonSize {
-    Large = 'large',
-    Small = 'small',
-}
+// export enum ButtonSize {
+//     Large = 'large',
+//     Small = 'small',
+// }
+
+// 使用 type 对 ButtonSize 的类型进行限定
+type ButtonSize = 'large' | 'small';
 
 // 按钮的类型（颜色）
-export enum ButtonType {
-    Primary = 'primary',
-    Default = 'default',
-    Danger = 'danger',
-    Link = 'link',
-}
+// export enum ButtonType {
+//     Primary = 'primary',
+//     Default = 'default',
+//     Danger = 'danger',
+//     Link = 'link',
+// }
+
+type ButtonType = 'primary' | 'default' | 'danger' | 'link';
 
 interface BaseButtonProps {
     className?: string;
@@ -56,10 +61,12 @@ const Button: React.FC<ButtonProps> = (props) => {
         [`btn-${size}`]: size,
         [`btn-${btnType}`]: btnType,
         // 在按钮类型是链接（link）的时候，disabled才能起作用
-        disabled: (btnType === ButtonType.Link) && disabled,
+        // disabled: (btnType === ButtonType.Link) && disabled,
+        disabled: (btnType === 'link') && disabled,
     });
 
-    if (btnType === ButtonType.Link && href) {
+    // if (btnType === ButtonType.Link && href) {
+    if (btnType === 'link' && href) {
         return (
             <a
                 className={classes}
@@ -85,7 +92,8 @@ const Button: React.FC<ButtonProps> = (props) => {
 // 设置Button组件的默认props
 Button.defaultProps = {
     disabled: false,
-    btnType: ButtonType.Default
+    // btnType: ButtonType.Default
+    btnType: 'default'
 }
 
 export default Button;

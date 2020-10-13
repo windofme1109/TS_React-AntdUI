@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {fas} from '@fortawesome/free-solid-svg-icons';
 
@@ -8,6 +8,8 @@ import Menu from './components/Menu/menu';
 import MenuItem from './components/Menu/menuItem';
 import SubMenu from './components/Menu/subMenu';
 import Icon from './components/Icon/icon';
+import Transition from './components/Transition/transition';
+import Button from './components/Button/button';
 import './styles/index.scss';
 
 // 从 @fortawesome/free-solid-svg-icons 引入所有的图标：fas （所有图标的集合）
@@ -17,9 +19,11 @@ import './styles/index.scss';
 library.add(fas);
 
 function App() {
+
+    const [show, setShow] = useState(true);
+
     return (
         <React.Fragment>
-
                 <Menu defaultIndex={'0'} onSelected={(index) => alert(index)} defaultOpenSubMenus={['1']}>
                     <MenuItem>
                         cool link
@@ -39,6 +43,30 @@ function App() {
                         cool link
                     </MenuItem>
                 </Menu>
+                <Button size={"large"} btnType={"primary"} onClick={() => setShow(!show)}>Toggle</Button>
+            {/*// Transition 组件只能包含一个子元素*/}
+            <Transition
+                    in={show}
+                    timeout={400}
+                    animation="zoom-in-top"
+                >
+                    <div>
+                        <p>learning react and react hooks</p>
+                        <p>learning react and react hooks</p>
+                        <p>learning react and react hooks</p>
+                        <p>learning react and react hooks</p>
+                        <p>learning react and react hooks</p>
+                    </div>
+
+                </Transition>
+                <Transition
+                    in={show}
+                    timeout={400}
+                    animation="zoom-in-left"
+                    wrapper={true}
+                >
+                    <Button size={"large"} btnType={"primary"}>Test</Button>
+                </Transition>
         </React.Fragment>
     );
 }
