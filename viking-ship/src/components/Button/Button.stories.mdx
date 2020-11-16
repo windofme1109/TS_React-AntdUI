@@ -1,11 +1,21 @@
-import {Meta, Story, Canvas} from '@storybook/addon-docs/blocks';
+import {Meta, Story, Canvas, ArgsTable} from '@storybook/addon-docs/blocks';
+import Button from './button';
 
+<Meta title='Button' component={Button} />
 
-<Meta title="MDX/Button" component={Button} />
 # Button
 
-Let's define a story for our `Badge` component:
+```js
+    import Button from 'Button';
+    <Button>Test Button</Button>
+```
 
-<Story name="positive">
-    <Button>Positive</Button>
+<Story id="" name='Button' height='400px'>
+  <Button>Default</Button>
+  <Button btnType="primary">Primary</Button>
+  <Button btnType="danger">Danger</Button>
 </Story>
+
+## ArgsTable
+
+<ArgsTable of={Button} />

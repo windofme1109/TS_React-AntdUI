@@ -9,9 +9,9 @@ import Button, { ButtonProps } from './button';
 
 
 
-/**
- * 使用 CSF (Component Story Format)  的方式书写 story
- */
+// /**
+//  * 使用 CSF (Component Story Format)  的方式书写 story
+//  */
 // export default {
 //     title: 'Button',
 //     component: Button,
@@ -83,7 +83,13 @@ const buttonWithType = () => (
     </Fragment>
 )
 
+/**
+ * 这里使用 storiesOf() 定义一个组件的 story，因此要想通过 addon-docs 这个插件生成组件的 props 列表
+ * 必须使用addParameters()，传入的参数是：{component: Button}
+ */
+
 storiesOf('Button', module)
+    .addParameters({component: Button})
     .addDecorator(centerDecorator)
     .add('默认按钮', defaultButton)
     .add('不同大小的按钮', buttonWithSize)

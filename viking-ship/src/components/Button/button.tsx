@@ -1,4 +1,4 @@
-import React, {ReactHTMLElement} from 'react';
+import React, {FC, ReactHTMLElement, ButtonHTMLAttributes, Component, AnchorHTMLAttributes} from 'react';
 import classNames from 'classnames';
 
 // 按钮的大小
@@ -21,29 +21,35 @@ type ButtonSize = 'large' | 'small';
 type ButtonType = 'primary' | 'default' | 'danger' | 'link';
 
 interface BaseButtonProps {
+    /** 类名称 */
     className?: string;
+    /** 是否禁用 */
     disabled?: boolean;
+    /** 按钮尺寸 */
     size?: ButtonSize;
+    /** 按钮类型 */
     btnType?: ButtonType;
     // react的组件的props有一个children属性，这个属性用来获取组件的所有子节点
     // 没有子节点，children的值是undefined，只有一个子节点，是对象，多个则是数组
     // 注意，不带标签的纯文本也是节点
+    /** 子属性 */
     children: React.ReactNode;
+    /** 目标链接 */
     href?: string;
 }
 
 // 使用交叉类型将BaseButtonProps和ButtonHTMLAttributes合并为一个类型
 // ButtonHTMLAttributes具有button元素的所有属性（原生button）
 // 将泛型类型指定为HTMLButtonElement
-type NativeButtonProps = BaseButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
-type NativeAnchorProps = BaseButtonProps & React.AnchorHTMLAttributes<HTMLAnchorElement>
+type NativeButtonProps = BaseButtonProps & ButtonHTMLAttributes<HTMLButtonElement>;
+type NativeAnchorProps = BaseButtonProps & AnchorHTMLAttributes<HTMLAnchorElement>
 
 // 类型映射 —— Partial
 // 将NativeAnchorProps与NativeButtonProps合并为一个类型
 // 并使用Partial，将其所有的属性指定为可选，因为使用过程中，不一定会传入所有属性
 export type ButtonProps = Partial<NativeAnchorProps & NativeButtonProps>;
 
-const Button: React.FC<ButtonProps> = (props) => {
+const Button: FC<ButtonProps> = (props: BaseButtonProps) => {
     const {
         size,
         className,
