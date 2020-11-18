@@ -565,11 +565,12 @@
       
       <ArgsTable of={Button} />
    ```
-   每个组件的 mdx 文件都必须有 Meta 这个组件，必须设置 Meta 的 title 和 component。  
+   如果使用 Meta 这个组件，必须设置 Meta 的 title 和 component。  
    可以按照标准的 markdown 语法写组件的文档。  
    可以定义 story。Storybook 也会渲染这个 story。一个文件可以定义多个 story，需要注意的是每个 story 的 name 必须不一样。
    每个Canvas 相当于一个独立的区域。  
    ArgsTable 是 props table。将其 of 属性指定为引入的组件即可。  
    使用 MDX 的方式，实际上即相当于写了组件的文档，又相当于写了 story。
+   
 
 
