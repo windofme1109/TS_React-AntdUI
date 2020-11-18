@@ -101,8 +101,8 @@
      - 定义 story  
        一个 story 就是一个函数，定义如何渲染组件。我们可以给一个组件定义多个 story。
      ```tsx
-         export const primary: React.SFC<{}> = () => <Button btnType="primary">primary</Button>
-         export const danger: React.SFC<{}> = () => <Button btnType="danger">danger</Button>
+         export const primary: React.FC<{}> = () => <Button btnType="primary">primary</Button>
+         export const danger: React.FC<{}> = () => <Button btnType="danger">danger</Button>
      ```
        这种方式可以给一个组件注册多个 story。
      - 使用 args 定义 story  
@@ -235,7 +235,7 @@
    - 使用 `storiesOf` API 的方式
      - 根据官方文档来说，`storiesOf` API 属于过时的内容，但是视频教程中使用的是 `storiesOf`，这里也记录一下 `storiesOf` 的用法。
      - 示例代码：
-       ```tsx
+     ```tsx
           import React, {Fragment} from 'react';
           import {storiesOf} from '@storybook/react';
           import {action} from '@storybook/addon-actions';
@@ -283,14 +283,293 @@
               .add('默认按钮', defaultButton)
               .add('不同大小的按钮', buttonWithSize)
               .add('不同类型的按钮', buttonWithType)
-       ```
+     ```
        
      - 书写 story  
        引入 `storiesOf` API  
        `import {storiesOf} from '@storybook/react';`   
-       给storiesOf
-         
+       storiesOf() 函数接收两个参数，第一个参数是组件的名称，值为字符串。如果我们传了类似这样的 `Widgets|Button/Button` 字符串，Storybook 会按照层级目录来展示组件的 story。  
+       `storiesOf()` 详解  
+       storiesOf() 接收的第二个参数是由 Webpack 提供的 `module` 参数，这个 `module` 是全局变量，每个模块都会提供，主要作用是启用热模块替换（hot-module-replacement）。  
+       接下来我们可以使用链式法则调用 add() 方法，这个方法用来添加一个 story。  
+       `add()` 详解  
+       add() 方法接收两个参数，第一个参数是 story 名称，值为字符串，第二个参数是一个函数，这个函数实际上就是一个函数式组件。为了方便，我们可以在外面定义好函数，然后传入 add() 中。  
+       示例代码：
+     ```tsx
+        import React, {Fragment} from 'react';
+        import {storiesOf} from '@storybook/react';
+        import {action} from '@storybook/addon-actions';
+        import Button, { ButtonProps } from './button';
+        const defaultButton = () =>(
+             <Fragment>
+                   <Button btnType="default" onClick={action('clicked')}>默认样式</Button>
+             </Fragment>
+        )
+        storiesOf('Button', module)
+             .add('默认按钮', defaultButton)
+     ```
+     - 添加 decorators  
+       有三种方式添加 decorators，第一种 story 级别的，作为 add() 的第三个参数，第三个参数是一个对象，decorators 作为其中的一个属性。示例代码如下：
+       ```tsx
+           const defaultButton = () =>(
+                       <Fragment>
+                             <Button btnType="default" onClick={action('clicked')}>默认样式</Button>
+                       </Fragment>
+                  )
+           storiesOf('Button', module)
+                .add(
+                   '默认按钮', 
+                   defaultButton,
+                   { decorators: [
+                       // 包裹 Story 的外层元素是行内元素
+                       (Story: any) => (<div style={{textAlign: 'center'}}>{<Story />}</div>),
+                   ]}
+           )
+       ```
+       第二种添加 decorator 的方式是组件（component）级别的，这个我们可以使用 addDecorator() 方法，addDecorator() 接收一个函数式组件作为参数。我们可以多次调用 addDecorator() 方法，但是所有的调用必须在第一个 add() 方法前面。示例代码如下：
+       ```tsx
+       const defaultButton = () =>(
+                <Fragment>
+                     <Button btnType="default" onClick={action('clicked')}>默认样式</Button>
+                     </Fragment>
+       )
+       
+       // 使用装饰器（Decorator）添加完成额外的属性
+       const styles: React.CSSProperties = {
+           textAlign: 'center'
+       }
+       const centerDecorator = (StoryFn: any) => <div style={styles}>{StoryFn()}</div>
+       
+       storiesOf('Button', module)
+            .addDecorator(centerDecorator)
+            .add('默认按钮', defaultButton)
+       ```
+       最后一种添加 decorator 的方式是全局（global）添加，添加位置是`.storybook/preview.js`。添加方式与前面 CSF 方式中的类似，这里不在详细说明。
+     - 添加 parameters  
+       添加 parameters 与添加 decorator 类似，有三种方式添加 parameters，第一种 story 级别的，作为 add() 的第三个参数，与 decorator 一起作为第三个参数的属性。示例代码如下：
+     ```tsx
+          const defaultButton = () =>(
+              <Fragment>
+                   <Button btnType="default" onClick={action('clicked')}>默认样式</Button>
+              </Fragment>
+          )
+          storiesOf('Button', module)
+              .add('默认按钮', defaultButton,
+                  {
+                      backgrounds: {
+                           values: [
+                               {name: 'red', value: '#f00'},
+                               {name: 'green', value: '#0f0'},
+                               {name: 'black', value: '#000'}
+                           ],
+                      },
+                      decorators: [
+                          // 包裹 Story 的外层元素是行内元素
+                          (Story: any) => (<div style={{textAlign: 'center'}}>{<Story />}</div>),
+                      ]
+                  })
+     ```
+       第二种添加 parameter 的方式是组件（component）级别的，这个我们可以使用 addParameters() 方法，addParameters() 接收一个parameters对象作为参数，注意：**addParameters() 只能调用一次**。示例代码如下：
+     ```tsx
+        const defaultButton = () =>(
+                 <Fragment>
+                      <Button btnType="default" onClick={action('clicked')}>默认样式</Button>
+                 </Fragment>
+        )
+               
+        // 使用装饰器（Decorator）添加完成额外的属性
+        const styles: React.CSSProperties = {
+            textAlign: 'center'
+        }
+        const centerDecorator = (StoryFn: any) => <div style={styles}>{StoryFn()}</div>
+               
+        storiesOf('Button', module)
+             .addParameters({backgrounds: {values: [{name: "red", value: "#f00"}]}})
+             .addDecorator(centerDecorator)
+             .add('默认按钮', defaultButton)
+     ```
+        最后一种添加 parameters 的方式是全局（global）添加，添加位置是`.storybook/preview.js`。添加方式与前面 CSF 方式中的类似，这里不在详细说明。
        
        
        
        
+       
+       
+#### 3.2 书写 Doc
+
+1. 参考资料
+   - 在 React 书写 Doc 参考资料：[Storybook Docs for React](https://github.com/storybookjs/storybook/tree/next/addons/docs/react)
+   - MDX 参考资料：[MDX](https://storybook.js.org/docs/react/writing-docs/mdx/)
+ 
+2. 除了展示组件，我们还需要对组件进行说明，也就是我们的组件具备哪些能力。主要是对我们自定义的 props 进行说明，还包括一些具体的使用方法。
+
+3. 给组件添加文档说明，主要是使用插件（addon），在 Storybook 6.0 版本使用 `addon-docs` 这个插件来生成文档。视频中使用的是 `aadon-info`，这个插件被弃用了，所有我使用了最新的 `addon-docs`。
+
+4. `addon-docs` 引入了 `MDX` 语法来书写组件文档。`MDX` 混合了 `markdown` 和 `JSX`，使得我们既可以在文件中以 `markdown` 格式写文档，又可以以 `JSX` 的方式导出组件。
+
+5. 安装 `addon-docs`  
+
+   `npm install -D @storybook/addon-docs` 
+    
+   `addon-docs` 依赖于 `React` 和 `babel-loader`,如果我们没有安装这两个包，则需要手动安装一下：  
+   
+   `npm install -D react babel-loader`  
+     
+   我觉得安装这两个包，是在手动配置webpack，各种依赖需要自己安装的情况下，才需要手动去安装，而我们使用的是 `create-react-app` 创建的项目，已经帮我们集成了这些东西，所以不需要我们手动安装。
+   
+6. 配置
+   - 在 `.storybook/main.js` 中，添加：
+     ```javascript
+        module.exports = {
+          // other settings
+          "stories": [
+             // "../src/**/*.stories.mdx",
+             "../src/**/*.stories.@(js|jsx|ts|tsx|mdx)"
+         ],
+          addons: ['@storybook/addon-docs']
+        }
+     ```
+   - 基于 TypeScript 的配置：  
+     如果我们项目使用的是 TypeScript，那么还需要做进一步的配置，在 `.storybook/main.js` 中，添加：
+   ```javascript
+      module.exports = {
+          // other settings
+          typescript: {
+              check: false,
+              checkOptions: {},
+              reactDocgen: 'react-docgen',
+              reactDocgenTypescriptOptions: {
+                  shouldExtractLiteralValuesFromEnum: true,
+                  propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true)
+              },
+          },
+      }
+   ```
+
+7. 生成自定义 props 表格
+   
+   - Storybook 会根据 PropTypes 或者 TypeScript 的类型生成 props 表格。只要保证我们在 story 的元数据配置中指定了 component 的值：
+   ```tsx
+      import { Button } from './Button';
+      
+      export default {
+        title: 'Button',
+        component: Button,
+      };
+   ```
+   - 如果我们使用的是 `storiesOf` 方式定义的 story，那么我们使用 addParameters() 方法：
+   ```tsx
+      import { storiesOf } from '@storybook/react';
+      import { Button } from './Button';
+      
+      storiesOf('InfoButton', module)
+        .addParameters({ component: Button })
+        .add( ... );
+   ```
+   - 如果项目中使用的是 TypeScript，那么我们还需要安装 `react-docgen` 这个工具，用来提取使用 TypeScript 写的组件的自定义的 props。首先进行安装：  
+       
+     `npm install --save-dev react-docgen`  
+     
+     需要在 `.storybook/main.js` 中配置：
+     ```javascript
+        module.exports = {
+            // other settings
+            typescript: {
+                 check: false,
+                 checkOptions: {},
+                 reactDocgen: 'react-docgen',
+                     
+            },
+        }
+     ```
+     
+     `react-docgen` 缺乏对导入的类型的支持，所以如果我们的类型是从另外的文件或者包导入的，会被忽略，而且 `react-docgen` 对 React.FC 等从 React 中引出的类型的支持也不好，所以，我们需要改动一下组件，将 FC、ButtonHTMLAttributes等类型直接从 react 库中引入：
+   ```tsx
+      import React, {FC, ReactHTMLElement, ButtonHTMLAttributes, Component, AnchorHTMLAttributes} from 'react';
+      
+      interface BaseButtonProps {
+          /** 类名称 */
+          className?: string;
+          /** 是否禁用 */
+          disabled?: boolean;
+          /** 按钮尺寸 */
+          size?: ButtonSize;
+          /** 按钮类型 */
+          btnType?: ButtonType;
+          // react的组件的props有一个children属性，这个属性用来获取组件的所有子节点
+          // 没有子节点，children的值是undefined，只有一个子节点，是对象，多个则是数组
+          // 注意，不带标签的纯文本也是节点
+          /** 子属性 */
+          children: React.ReactNode;
+          /** 目标链接 */
+          href?: string;
+      }  
+      type NativeButtonProps = BaseButtonProps & ButtonHTMLAttributes<HTMLButtonElement>;
+      type NativeAnchorProps = BaseButtonProps & AnchorHTMLAttributes<HTMLAnchorElement>
+      export type ButtonProps = Partial<NativeAnchorProps & NativeButtonProps>;
+      
+      const Button: FC<ButtonProps> = (props: BaseButtonProps)  => {...}
+   ```
+     同时，对于函数式组件，对其接收的 props，还要指定其类型为自定义的 props，要不然还是生成不了 props table。  
+     上面两个问题实际上是 `react-docgen` 的 bug，期待未来官方能给修复。
+     
+8. 以 MDX 的方式书写文档
+
+   - 新建 `Button.stories.mdx` 文件，注意，`MDX` 文件以 `.stories.mdx` 结尾。
+   - 引入相关的模块：
+   ```tsx
+      import {Meta, Story, Canvas, ArgsTable} from '@storybook/addon-docs/blocks';
+      import Button from './button';
+   ```
+   - markdown 和 jsx 的混写：
+   ```
+      <Meta title='MDX/Button' component={Button} />
+      
+      # Button-Type
+      
+      1. 设置不同的 `btnType` 控制按钮的颜色
+      2. 不设置 `btnType`，显示默认的颜色
+      
+      \\```js  
+          import Button from 'Button';
+          const default = () => <Button>Default</Button>
+          const primary = () => <Button btnType="primary">Primary</Button>
+          const danger = () => <Button btnType="danger">Danger</Button>
+      \\```
+      
+      <Canvas>
+          <Story name='Button-Type' height='400px'>
+            <Button>Default</Button>
+            <Button btnType="primary">Primary</Button>
+            <Button btnType="danger">Danger</Button>
+            <Button btnType="primary" disabled>Disabled</Button>
+          </Story>
+      </Canvas>
+      
+      # Button-Size
+      
+      \\```js  
+         import Button from 'Button';
+         const primary = () => <Button btnType="primary" size="large">Large</Button>
+         const danger = () => <Button btnType="danger" size="small">Large</Button>
+      \\```
+      
+      <Canvas>
+          <Story name="Button-Size">
+              <Button btnType="primary" size="large">Large</Button>
+              <Button btnType="primary" size="small">Small</Button>
+          </Story>
+      </Canvas>
+      
+      ## 属性列表
+      
+      <ArgsTable of={Button} />
+   ```
+   每个组件的 mdx 文件都必须有 Meta 这个组件，必须设置 Meta 的 title 和 component。  
+   可以按照标准的 markdown 语法写组件的文档。  
+   可以定义 story。Storybook 也会渲染这个 story。一个文件可以定义多个 story，需要注意的是每个 story 的 name 必须不一样。
+   每个Canvas 相当于一个独立的区域。  
+   ArgsTable 是 props table。将其 of 属性指定为引入的组件即可。  
+   使用 MDX 的方式，实际上即相当于写了组件的文档，又相当于写了 story。
+
+

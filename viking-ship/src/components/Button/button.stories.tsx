@@ -9,52 +9,52 @@ import Button, { ButtonProps } from './button';
 
 
 
-// /**
-//  * 使用 CSF (Component Story Format)  的方式书写 story
-//  */
-// export default {
-//     title: 'Button',
-//     component: Button,
-//     parameters: {
-//         backgrounds: {
-//             values: [
-//                 { name: 'red', value: '#f00' },
-//                 { name: 'green', value: '#0f0' },
-//                 {name: 'black', value: '#000'}
-//             ],
-//         },
-//     },
-//     decorators: [
-//         // 包裹 Story 的外层元素是行内元素
-//         (Story) => (<div style={{textAlign: 'center'}}>{<Story />}</div>),
-//     ]
-//     // backgroundColor: { control: 'color' },
-//     // onClick: {action: 'clicked'}
-// } as Meta;
-// // export const primary: React.FC<{}> = () => <Button btnType="primary">primary</Button>
-// const Template: Story<ButtonProps> = (args) => (<Button {...args} />);
-//
-// export const Primary = Template.bind({});
-// Primary.args = {
-//     btnType: 'primary',
-//     children: 'Primary'
-// };
-// Primary.decorators = [(Story) => <div style={{ margin: '3em' }}><Story/></div>
-// Primary.parameters = {
-//     backgrounds: {
-//         values: [
-//             { name: 'red', value: '#f00' },
-//             { name: 'green', value: '#0f0' },
-//         ],
-//     },
-// }
+/**
+ * 使用 CSF (Component Story Format)  的方式书写 story
+ */
+export default {
+    title: 'CSF/Button',
+    component: Button,
+    parameters: {
+        backgrounds: {
+            values: [
+                { name: 'red', value: '#f00' },
+                { name: 'green', value: '#0f0' },
+                {name: 'black', value: '#000'}
+            ],
+        },
+    },
+    decorators: [
+        // 包裹 Story 的外层元素是行内元素
+        (Story) => (<div style={{textAlign: 'center'}}>{<Story />}</div>),
+    ]
+    // backgroundColor: { control: 'color' },
+    // onClick: {action: 'clicked'}
+};
+// export const primary: React.FC<{}> = () => <Button btnType="primary">primary</Button>
+const Template: Story<ButtonProps> = (args) => (<Button {...args} />);
+
+export const Primary = Template.bind({});
+Primary.args = {
+    btnType: 'primary',
+    children: 'Primary'
+};
+Primary.decorators = [(Story) => <div style={{ margin: '3em' }}><Story/></div>]
+Primary.parameters = {
+    backgrounds: {
+        values: [
+            { name: 'red', value: '#f00' },
+            { name: 'green', value: '#0f0' },
+        ],
+    },
+}
 
 
-// export const Danger = Template.bind({});
-// Danger.args = {
-//     btnType: 'danger',
-//     children: 'Danger'
-// };
+export const Danger = Template.bind({});
+Danger.args = {
+    btnType: 'danger',
+    children: 'Danger'
+};
 
 
 /**
@@ -97,9 +97,9 @@ const buttonWithType = () => (
  * 必须使用addParameters()，传入的参数是：{component: Button}
  */
 
-storiesOf('Button', module)
-    .addParameters({component: Button})
-    .addDecorator(centerDecorator)
-    .add('默认按钮', defaultButton)
-    .add('不同大小的按钮', buttonWithSize)
-    .add('不同类型的按钮', buttonWithType)
+// storiesOf('CSF/Button', module)
+//     .addParameters({component: Button})
+//     .addDecorator(centerDecorator)
+//     .add('默认按钮', defaultButton)
+//     .add('不同大小的按钮', buttonWithSize)
+//     .add('不同类型的按钮', buttonWithType)

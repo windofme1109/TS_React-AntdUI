@@ -1,21 +1,44 @@
 import {Meta, Story, Canvas, ArgsTable} from '@storybook/addon-docs/blocks';
 import Button from './button';
 
-<Meta title='Button' component={Button} />
+<Meta title='MDX/Button' component={Button} />
 
-# Button
+# Button-Type
+
+1. 设置不同的 `btnType` 控制按钮的颜色
+2. 不设置 `btnType`，显示默认的颜色
 
 ```js
     import Button from 'Button';
-    <Button>Test Button</Button>
+    const default = () => <Button>Default</Button>
+    const primary = () => <Button btnType="primary">Primary</Button>
+    const danger = () => <Button btnType="danger">Danger</Button>
 ```
 
-<Story id="" name='Button' height='400px'>
-  <Button>Default</Button>
-  <Button btnType="primary">Primary</Button>
-  <Button btnType="danger">Danger</Button>
-</Story>
+<Canvas>
+    <Story name='Button-Type' height='400px'>
+      <Button>Default</Button>
+      <Button btnType="primary">Primary</Button>
+      <Button btnType="danger">Danger</Button>
+      <Button btnType="primary" disabled>Disabled</Button>
+    </Story>
+</Canvas>
 
-## ArgsTable
+# Button-Size
+
+```js
+   import Button from 'Button';
+   const primary = () => <Button btnType="primary" size="large">Large</Button>
+   const danger = () => <Button btnType="danger" size="small">Large</Button>
+```
+
+<Canvas>
+    <Story name="Button-Size">
+        <Button btnType="primary" size="large">Large</Button>
+        <Button btnType="primary" size="small">Small</Button>
+    </Story>
+</Canvas>
+
+## 属性列表
 
 <ArgsTable of={Button} />
