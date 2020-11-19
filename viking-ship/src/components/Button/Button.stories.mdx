@@ -1,4 +1,5 @@
 import {Meta, Story, Canvas, ArgsTable} from '@storybook/addon-docs/blocks';
+import {action} from '@storybook/addon-actions';
 import Button from './button';
 
 <Meta title='MDX/Button' component={Button} />
@@ -18,13 +19,16 @@ import Button from './button';
 <Canvas>
     <Story name='Button-Type' height='400px'>
       <Button>Default</Button>
-      <Button btnType="primary">Primary</Button>
+      <Button btnType="primary" onClick={action('clicked')}>Primary</Button>
       <Button btnType="danger">Danger</Button>
       <Button btnType="primary" disabled>Disabled</Button>
     </Story>
 </Canvas>
 
 # Button-Size
+
+1. 设置不同的 `size` 控制按钮的大小
+2. 不设置 `size`，显示默认的颜色
 
 ```js
    import Button from 'Button';
@@ -40,5 +44,5 @@ import Button from './button';
 </Canvas>
 
 ## 属性列表
-
 <ArgsTable of={Button} />
+

@@ -54,9 +54,6 @@
         export default {
             title: 'Button',
             component: Button,
-            argTypes: {
-                backgroundColor: { control: 'color' },
-            },
         } as Meta;
         
         const Template: Story<ButtonProps> = (args) => (<Button {...args} />);
@@ -93,8 +90,6 @@
           export default {
               title: 'Button',
               component: Button,
-              argTypes: {
-                  backgroundColor: { control: 'color' },
                   } as Meta;
      ```
      默认导出元数据，控制着 Storybook 展示的组件的 stories，并且给插件（addons）提供基本的信息。
@@ -112,7 +107,8 @@
           export const Primary = Template.bind({});
           Primary.args = {
                  btnType: 'primary',
-                 children: 'Primary'
+                 children: 'Primary',
+                 onClick: action('clicked')
           };
                   
           export const Danger = Template.bind({});
@@ -139,7 +135,7 @@
        比如说，我只想给 Button 组件的 story 设置不同的背景，那么通过 Parameters 就可以设置。
      ```tsx
         export default {
-            title: 'Button',
+            title: 'CSF-1/Button',
             component: Button,
             parameters: {
                 backgrounds: {
@@ -277,7 +273,7 @@
            * 必须使用addParameters()，传入的参数是：{component: Button}
            */
           
-          storiesOf('Button', module)
+          storiesOf('CSF/Button', module)
               .addParameters({component: Button})
               .addDecorator(centerDecorator)
               .add('默认按钮', defaultButton)
@@ -400,6 +396,7 @@
 1. 参考资料
    - 在 React 书写 Doc 参考资料：[Storybook Docs for React](https://github.com/storybookjs/storybook/tree/next/addons/docs/react)
    - MDX 参考资料：[MDX](https://storybook.js.org/docs/react/writing-docs/mdx/)
+   - CSF与React：[Storybook Docs Recipes](https://github.com/storybookjs/storybook/blob/next/addons/docs/docs/recipes.md)
  
 2. 除了展示组件，我们还需要对组件进行说明，也就是我们的组件具备哪些能力。主要是对我们自定义的 props 进行说明，还包括一些具体的使用方法。
 
@@ -511,7 +508,9 @@
       const Button: FC<ButtonProps> = (props: BaseButtonProps)  => {...}
    ```
      同时，对于函数式组件，对其接收的 props，还要指定其类型为自定义的 props，要不然还是生成不了 props table。  
-     上面两个问题实际上是 `react-docgen` 的 bug，期待未来官方能给修复。
+     上面两个问题实际上是 `react-docgen` 的 bug，期待未来官方能给修复。  
+     在自定义 props 的每个属性上添加注释，注释的格式是：`/** */`，在 props table 中，就会将这个注释作为属性说明。如下图所示：
+     ![](./img/props-table.png)
      
 8. 以 MDX 的方式书写文档
 
@@ -519,6 +518,7 @@
    - 引入相关的模块：
    ```tsx
       import {Meta, Story, Canvas, ArgsTable} from '@storybook/addon-docs/blocks';
+      import {action} from '@storybook/addon-actions';
       import Button from './button';
    ```
    - markdown 和 jsx 的混写：
@@ -540,7 +540,7 @@
       <Canvas>
           <Story name='Button-Type' height='400px'>
             <Button>Default</Button>
-            <Button btnType="primary">Primary</Button>
+            <Button btnType="primary" onClick={action('clicked')}>Primary</Button>
             <Button btnType="danger">Danger</Button>
             <Button btnType="primary" disabled>Disabled</Button>
           </Story>
@@ -570,7 +570,104 @@
    可以定义 story。Storybook 也会渲染这个 story。一个文件可以定义多个 story，需要注意的是每个 story 的 name 必须不一样。
    每个Canvas 相当于一个独立的区域。  
    ArgsTable 是 props table。将其 of 属性指定为引入的组件即可。  
-   使用 MDX 的方式，实际上即相当于写了组件的文档，又相当于写了 story。
+   使用 MDX 的方式，实际上即相当于写了组件的文档，又相当于写了 story。  
+   **注意**，在同一个组件中，如果同时存在 CSF 和 MDX，如果我们想在MDX 中混写 story 和文档，那么我们只能在 MDX 中定义 Meta，在 CSF 中的默认导出就不要定义为 Meta 了。示例代码如下：  
+   ```tsx
+      // button.stories.tsx
+      export default {
+          title: 'CSF/Button',
+          component: Button,
+      }
    
-
-
+      // button.stories.mdx
+      <Meta title='MDX/Button' component={Button} />
+   ```
+   MDX 文件中定义的 Meta，名称要与 CSF 中默认导出的组件的名称不同。最好采用层级命名的方法，以 `/` 进行划分，这样就会被 Storybook 渲染问层级目录。如上面的代码所示，CSF 和 MDX 就会分别被渲染为：
+   ```javascript
+    |--  CSF
+    |     |-- Button
+    |  
+    |
+    |--  MDX
+          |-- Button
+   ```
+   
+9. CSF 和 MDX 的结合
+   
+   - 前面介绍的 MDX 实际上是将定义 stroy 与组件混合到一起来写了。实际上我们可以分开来写：在 CSF 中定义 stroy，在 MDX 中写组件文档。
+   - 在 `icon.stories.tsx` 中书写 story：
+   ```tsx
+      import React from 'react';
+      import Icon from './icon';
+      import {library} from '@fortawesome/fontawesome-svg-core';
+      import {fas} from '@fortawesome/free-solid-svg-icons';
+      import mdx from './icon.mdx';
+      
+      library.add(fas);
+      
+      export default {
+          title: 'Demo/Icon',
+          parameters: {
+              docs: {
+                  page: mdx,
+              },
+          },
+          component: Icon,
+      };
+      export const basic = () => <div>
+          <Icon icon="coffee" theme="success" size="2x" />
+          basic
+      </div>;
+      
+      export const film = () => <div>
+          <Icon icon="film" theme="second" size="2x" />
+          film
+      </div>;
+   ```
+   - 在 `icon.mdx` 中书写文档：
+   ```
+      import { Story, Canvas, ArgsTable } from '@storybook/addon-docs/blocks';
+      import Icon from './icon'
+      
+      # Icon
+      
+      I can embed a story (but not define one, since this file should not contain a `Meta`):
+      
+      \```js
+         import Icon from 'icon';
+         const basicIcon = () => <div>
+          <Icon icon="coffee" theme="success" size="2x" />
+         </div>
+      \```
+      
+      <Canvas>
+      <Story id="demo-icon--basic" />
+      </Canvas>
+      
+      And I can also embed arbitrary markdown & JSX in this file.
+      \```js
+         import Icon from 'icon';
+         export const film = () => <div>
+             <Icon icon="film" theme="second" size="2x" />
+             film
+         </div>;
+      \```
+      
+      <Canvas>
+      <Story id="demo-icon--film" />
+      </Canvas>
+      
+      # 参数列表
+      <ArgsTable of={Icon} />
+   ```
+   - 注意的地方主要有：
+     1. 在 `icon.stories.tsx` 中，默认导出（export default）中，不定义为 Meta。即没有 `as Meta`。
+     2. 在 `icon.stories.tsx` 中，默认导出（export default）中，配置 parameters，设置 parameters 的 doc 属性：`docs: {page: mdx}`。
+     3. 在 `icon.stories.tsx` 中，直接导出函数式组件：`export const basic = () => <div><Icon icon="coffee" theme="success" size="2x" />basic</div>;`。
+     4. 在 `icon.mdx` 中，注意文件命名，后缀是 `mdx`，不是 `stories.mdx`。
+     5. 在 `icon.mdx` 中，不用定义 Meta 组件。
+     6. 在 `icon.mdx` 中，引入 Story，设置 Story 组件的 id。id 我们可以从页面的 url 中获取，也就是我们点击某一个具体的组件，页面展示的 url的路径的最后一个部分，如下图所示：  
+     ![](./img/icon-basic.png)
+       
+     `demo-icon-basic` 就是我们需要的那个 id。
+     7. 在 `icon.mdx` 中，可以引入已经存在 story，但是不应该定义新的 story。（在 MDX 中，定义新的 story 方式为设置 Story 组件的 `name` 属性）

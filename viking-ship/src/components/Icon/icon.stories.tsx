@@ -16,6 +16,11 @@ export default {
     component: Icon,
 };
 export const basic = () => <div>
-    <Icon icon="coffee" theme="success" size="2x">Basic</Icon>
-    test
+    <Icon icon="coffee" theme="success" size="2x" />
+    basic
+</div>;
+
+export const film = () => <div>
+    <Icon icon="film" theme="second" size="2x" />
+    film
 </div>;

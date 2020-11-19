@@ -26,18 +26,19 @@ export default {
     },
     decorators: [
         // 包裹 Story 的外层元素是行内元素
-        (Story) => (<div style={{textAlign: 'center'}}>{<Story />}</div>),
+        (Story) => (<div style={{textAlign: 'center', margin:'10px'}}>{<Story />}</div>),
     ]
     // backgroundColor: { control: 'color' },
     // onClick: {action: 'clicked'}
 };
-// export const primary: React.FC<{}> = () => <Button btnType="primary">primary</Button>
+export const primary: React.FC<{}> = () => <Button btnType="primary">primary</Button>
 const Template: Story<ButtonProps> = (args) => (<Button {...args} />);
 
 export const Primary = Template.bind({});
 Primary.args = {
     btnType: 'primary',
-    children: 'Primary'
+    children: 'Primary',
+    onClick: action('clicked')
 };
 Primary.decorators = [(Story) => <div style={{ margin: '3em' }}><Story/></div>]
 Primary.parameters = {
@@ -56,7 +57,10 @@ Danger.args = {
     children: 'Danger'
 };
 
-
+// export const basic = () => <Button>Basic</Button>;
+// basic.parameters = {
+//     foo: 'bar',
+// };
 /**
  * 使用 storiesOf API的方式书写 story
  */
