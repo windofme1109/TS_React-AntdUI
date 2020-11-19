@@ -30,7 +30,7 @@
 
 4. 最新版的 Storybook 引入许多新内容，在记录一下基本的使用方法。
 
-### 2. 安装
+### 2.安装
 
 1. Storybook 支持多种框架，如 React、Vue 等。我们这里使用的是 React。生成项目使用的是 create-react-app，使用的是 Typescript 进行开发。在项目已经创建的情况下，在命令行输入：  
    `npx sb init`  
