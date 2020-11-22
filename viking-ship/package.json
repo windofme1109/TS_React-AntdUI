@@ -16,6 +16,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-transition-group": "^4.4.0",
     "antd": "^3.26.16",
+    "babel-loader": "^8.1.0",
     "classnames": "^2.2.6",
     "immutability-helper": "^3.1.1",
     "node-sass": "^4.14.1",
@@ -59,7 +60,6 @@
     "@storybook/node-logger": "^6.0.28",
     "@storybook/preset-create-react-app": "^3.1.5",
     "@storybook/react": "^6.0.28",
-    "babel-loader": "^8.2.1",
     "react-docgen": "^5.3.1",
     "react-is": "^17.0.1"
   }

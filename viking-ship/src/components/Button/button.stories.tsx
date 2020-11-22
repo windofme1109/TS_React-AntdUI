@@ -26,7 +26,7 @@ export default {
     },
     decorators: [
         // 包裹 Story 的外层元素是行内元素
-        (Story) => (<div style={{textAlign: 'center', margin:'10px'}}>{<Story />}</div>),
+        (Story: any) => (<div style={{textAlign: 'center', margin:'10px'}}>{<Story />}</div>),
     ]
     // backgroundColor: { control: 'color' },
     // onClick: {action: 'clicked'}
@@ -40,7 +40,7 @@ Primary.args = {
     children: 'Primary',
     onClick: action('clicked')
 };
-Primary.decorators = [(Story) => <div style={{ margin: '3em' }}><Story/></div>]
+Primary.decorators = [(Story: any) => <div style={{ margin: '3em' }}><Story/></div>]
 Primary.parameters = {
     backgrounds: {
         values: [
