@@ -12,7 +12,7 @@ import Transition from './components/Transition/transition';
 import Button from './components/Button/button';
 import Input from './components/Input/input'
 import AutoComplete, {DataSourceType} from './components/AutoComplete/autoComplete'
-import Upload from './components/Upload/upload'
+import Upload from './components/Upload/upload';
 
 import './styles/index.scss';
 
@@ -22,16 +22,16 @@ import './styles/index.scss';
 // 使用字符串的方式，即可使用图标
 library.add(fas);
 
-interface LakersPlayerProps {
-    value: string,
-    number?: number
-}
-
-interface GithubUserProps {
-    login?: string,
-    url?: string,
-    avatar_url?: string
-}
+// interface LakersPlayerProps {
+//     value: string,
+//     number?: number
+// }
+//
+// interface GithubUserProps {
+//     login?: string,
+//     url?: string,
+//     avatar_url?: string
+// }
 
 function App() {
 
@@ -151,17 +151,18 @@ function App() {
     return (
         <React.Fragment>
             <div style={{width: '300px', height: '200px', margin: '20px auto'}}>
-                <Upload
-                    action='http://jsonplaceholder.typicode.com/posts'
-                    // onProgress={() => console.log('process')}
-                    // onSuccess={() => console.log('success')}
-                    // onError={() => console.log('error')}
+                <Upload />
+                {/*<Upload*/}
+                {/*    action='http://jsonplaceholder.typicode.com/posts'*/}
+                {/*    // onProgress={() => console.log('process')}*/}
+                {/*    // onSuccess={() => console.log('success')}*/}
+                {/*    // onError={() => console.log('error')}*/}
 
-                    // beforeUpload={checkFileSize}
-                    // beforeUpload={renameFile}
+                {/*    // beforeUpload={checkFileSize}*/}
+                {/*    // beforeUpload={renameFile}*/}
 
-                    // onChange={}
-                />
+                {/*    // onChange={}*/}
+                {/*/>*/}
             </div>
 
             {/*<input type="file" onChange={handleUpload}/>*/}
