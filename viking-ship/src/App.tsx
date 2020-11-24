@@ -148,21 +148,27 @@ function App() {
         return Promise.resolve(newFile);
     }
 
+    const defaultFileList = [
+        {uid: '123', size: 1234, name: 'hello.tsx', status: 'uploading', percent: 50},
+        {uid: '456', size: 1278, name: 'doge.png', status: 'success', percent: 30},
+        {uid: '789', size: 1258, name: 'girl.md', status: 'error', percent: 30},
+    ]
+
     return (
         <React.Fragment>
             <div style={{width: '300px', height: '200px', margin: '20px auto'}}>
-                <Upload />
-                {/*<Upload*/}
-                {/*    action='http://jsonplaceholder.typicode.com/posts'*/}
-                {/*    // onProgress={() => console.log('process')}*/}
-                {/*    // onSuccess={() => console.log('success')}*/}
-                {/*    // onError={() => console.log('error')}*/}
+                <Upload
+                    action='http://jsonplaceholder.typicode.com/posts'
+                    defaultFileList={defaultFileList}
+                    // onProgress={() => console.log('process')}
+                    // onSuccess={() => console.log('success')}
+                    // onError={() => console.log('error')}
 
-                {/*    // beforeUpload={checkFileSize}*/}
-                {/*    // beforeUpload={renameFile}*/}
+                    // beforeUpload={checkFileSize}
+                    // beforeUpload={renameFile}
 
-                {/*    // onChange={}*/}
-                {/*/>*/}
+                    // onChange={}
+                />
             </div>
 
             {/*<input type="file" onChange={handleUpload}/>*/}

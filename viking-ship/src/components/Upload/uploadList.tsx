@@ -1,10 +1,10 @@
 import React, {FC, Fragment} from 'react';
 import Icon from '../Icon/icon';
-// import {UploadFile} from './upload';
+import {UploadFile} from './upload';
 
 interface UploadListProps {
-    fileList: any,
-    onRemove: (_file: any) => void;
+    fileList: Array<UploadFile>,
+    onRemove: (_file: UploadFile) => void;
 }
 
 const UploadList: FC<UploadListProps> = (props) => {
@@ -39,8 +39,8 @@ const UploadList: FC<UploadListProps> = (props) => {
                             </span>
                             <span className="file-status">
                                 {item.status === 'uploading' && <Icon icon="spinner" spin theme="primary"/>}
-                                {item.status === 'success' && <Icon icon="check-circle" spin theme="success"/>}
-                                {item.status === 'error' && <Icon icon="times-circle" spin theme="danger"/>}
+                                {item.status === 'success' && <Icon icon="check-circle" theme="success"/>}
+                                {item.status === 'error' && <Icon icon="times-circle" theme="danger"/>}
                             </span>
                             <span className="file-action">
                                 <Icon icon="times" onClick={() => {onRemove(item)}}/>

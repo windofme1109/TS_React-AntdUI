@@ -4,6 +4,8 @@ import axios from 'axios';
 
 import Button from '../Button/button';
 
+import UploadList from './uploadList'
+
 // 定义几个上传文件的状态
 export type UploadFileStatus = 'ready' | 'uploading' | 'success' | 'error';
 
@@ -23,6 +25,8 @@ export interface UploadFile {
 export interface UploadProps {
     // 上传文件的地址
     action: string,
+    // 默认的文件列表，初始渲染上传组件的时候使用
+    defaultFileList?: any,
     // 文件上传前的回调，返回值可以是布尔值，或者是一个Promise对象
     // 可在文件上传前，进行一些操作
     beforeUpload?: (file: File) => boolean | Promise<File>,
@@ -33,21 +37,25 @@ export interface UploadProps {
     // 文件上传失败时的回调
     onError?: (error: any, file: File) => void,
     // 文件发生变化时的回调
-    onChange?: (file: File) => void
+    onChange?: (file: File) => void,
+    // 移除文件时的回调
+    onRemove?: (file: UploadFile) => void
 }
 
 const Upload: FC<UploadProps> = (props) => {
 
     const {
         action,
+        defaultFileList,
         beforeUpload,
         onProgress,
         onError,
         onSuccess,
-        onChange
+        onChange,
+        onRemove
     } = props;
 
-    const [fileList, setFileList] = useState<Array<UploadFile>>([]);
+    const [fileList, setFileList] = useState<Array<UploadFile>>(defaultFileList || []);
 
     const updateFileList = (updateFile: UploadFile, updateObj: Partial<UploadFile>) => {
         setFileList((prevFileList) => {
@@ -114,6 +122,16 @@ const Upload: FC<UploadProps> = (props) => {
 
         });
 
+    }
+
+    const handleRemove = (file: UploadFile) => {
+        setFileList((prevList) => {
+            return prevList.filter(item => item.uid !== file.uid)
+        });
+
+        if (onRemove) {
+            onRemove(file);
+        }
     }
 
     const postFile = (file: File) => {
@@ -188,6 +206,10 @@ const Upload: FC<UploadProps> = (props) => {
                     ref={fileInput}
                     onChange={handleFileChange}
                     style={{display: 'none'}}
+                />
+                <UploadList
+                    fileList={fileList}
+                    onRemove={handleRemove}
                 />
             </div>
         </Fragment>
