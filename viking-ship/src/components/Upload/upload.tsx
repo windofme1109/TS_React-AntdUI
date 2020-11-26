@@ -39,7 +39,14 @@ export interface UploadProps {
     // 文件发生变化时的回调
     onChange?: (file: File) => void,
     // 移除文件时的回调
-    onRemove?: (file: UploadFile) => void
+    onRemove?: (file: UploadFile) => void,
+    // 自定义 http 请求头
+    headers?: {[key: string]: any},
+    // 自定义的上传文件相关的数据
+    data?: {[key: string]: any},
+    name?: string,
+    // 是否提供上传凭证
+    widthCredentials?: boolean,
 }
 
 const Upload: FC<UploadProps> = (props) => {

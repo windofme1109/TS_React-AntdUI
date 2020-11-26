@@ -19,8 +19,15 @@ const Progress: FC<ProgressProps> = (props) => {
     } = props;
     return (
         <Fragment>
-            <div className="viking-progress-bar">
-
+            <div className="viking-progress-bar" style={style}>
+                <div className="viking-progress-bar-outer" style={{height: `${strokeHeight}px`}}>
+                    <div
+                        className={`viking-progress-bar-inner color-${theme}`}
+                        style={{width: `${percent}%`}}
+                    >
+                        {showText && <span className="inner-text">{`${percent}%`}</span>}
+                    </div>
+                </div>
             </div>
         </Fragment>
     )
@@ -29,6 +36,8 @@ const Progress: FC<ProgressProps> = (props) => {
 
 
 Progress.defaultProps = {
-
+    strokeHeight: 15,
+    showText: true,
+    theme: 'primary'
 }
 export default Progress;

@@ -1,6 +1,7 @@
 import React, {FC, Fragment} from 'react';
 import Icon from '../Icon/icon';
 import {UploadFile} from './upload';
+import Progress from '../Progress/progress';
 
 interface UploadListProps {
     fileList: Array<UploadFile>,
@@ -45,6 +46,13 @@ const UploadList: FC<UploadListProps> = (props) => {
                             <span className="file-action">
                                 <Icon icon="times" onClick={() => {onRemove(item)}}/>
                             </span>
+                            {
+                                item.status === 'uploading' &&
+                                    // 因为percent 不一定存在，所以要设置可选值
+                                <Progress
+                                    percent={item.percent || 0}
+                                />
+                            }
                         </li>
                     )
                 })}
