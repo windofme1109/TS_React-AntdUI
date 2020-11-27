@@ -3,7 +3,7 @@ import axios from 'axios';
 
 
 import Button from '../Button/button';
-
+import Dragger from './dragger';
 import UploadList from './uploadList'
 
 // 定义几个上传文件的状态
@@ -46,7 +46,12 @@ export interface UploadProps {
     data?: {[key: string]: any},
     name?: string,
     // 是否提供上传凭证
-    widthCredentials?: boolean,
+    withCredentials?: boolean,
+    // 设置上传文件的类型
+    accept?: string,
+    // 是否支持选择多个文件
+    multiple?: boolean,
+    drag?: boolean
 }
 
 const Upload: FC<UploadProps> = (props) => {
@@ -59,7 +64,15 @@ const Upload: FC<UploadProps> = (props) => {
         onError,
         onSuccess,
         onChange,
-        onRemove
+        onRemove,
+        headers,
+        data,
+        name,
+        withCredentials,
+        accept,
+        multiple,
+        drag,
+        children
     } = props;
 
     const [fileList, setFileList] = useState<Array<UploadFile>>(defaultFileList || []);
@@ -157,12 +170,28 @@ const Upload: FC<UploadProps> = (props) => {
         setFileList((prevFileList) => [_file, ...prevFileList]);
 
         const formData = new FormData();
-        formData.append(file.name, file);
+
+        // 用户可以自定义文件名称进行上传
+        // formData.append(file.name, file);
+        formData.append(name || 'file', file);
+
+        // 向表单中添加更多数据
+        if (data) {
+            Object.keys(data).forEach(item => {
+                formData.append(item, data[item]);
+            })
+        }
+
+
 
         axios.post(action, formData, {
             headers: {
+                // 添加自定义 headers
+                ...headers,
                 'Content-Type': 'multipart/form-data'
             },
+
+            withCredentials,
             // 处理上传进度事件，值为回调，传入一个事件，类型为 any，和上传过程相关的一些属性
             onDownloadProgress: (e: any) => {
                 let percentage = Math.round((e.load * 100) / e.total) || 0;
@@ -203,16 +232,23 @@ const Upload: FC<UploadProps> = (props) => {
     return (
         <Fragment>
             <div className="viking-upload-component">
-                <Button
-                    btnType="primary"
-                    onClick={handleClick}
-                >Upload File</Button>
+                {/*<Button*/}
+                {/*    btnType="primary"*/}
+                {/*    onClick={handleClick}*/}
+                {/*>Upload File</Button>*/}
+                {
+                    drag ? <Dragger
+                        onFile={(files) => uploadFiles(files)}
+                    >{children}</Dragger> : children
+                }
                 <input
                     className="viking-file-input"
                     type="file"
                     ref={fileInput}
                     onChange={handleFileChange}
                     style={{display: 'none'}}
+                    accept={accept}
+                    multiple={multiple}
                 />
                 <UploadList
                     fileList={fileList}
@@ -222,6 +258,12 @@ const Upload: FC<UploadProps> = (props) => {
         </Fragment>
     )
 
+}
+
+
+// 添加 默认属性
+Upload.defaultProps = {
+    name: 'file'
 }
 
 export default Upload;

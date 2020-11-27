@@ -159,7 +159,13 @@ function App() {
             <div style={{width: '300px', height: '200px', margin: '20px auto'}}>
                 <Upload
                     action='http://jsonplaceholder.typicode.com/posts'
-                    defaultFileList={defaultFileList}
+                    // defaultFileList={defaultFileList}
+                    name="FileName"
+                    data={{data: 'value'}}
+                    headers={{'X-Powered-By': 'Viking-Ship'}}
+                    accept=".png"
+                    multiple={true}
+                    drag={true}
                     // onProgress={() => console.log('process')}
                     // onSuccess={() => console.log('success')}
                     // onError={() => console.log('error')}
