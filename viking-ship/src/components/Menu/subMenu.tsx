@@ -16,7 +16,7 @@ import Icon from '../Icon/icon'
 // 使用字符串的方式，即可使用图标
 library.add(fas);
 
-interface SubMenuProps {
+export interface SubMenuProps {
     index?: string;
     title: string;
     className?: string

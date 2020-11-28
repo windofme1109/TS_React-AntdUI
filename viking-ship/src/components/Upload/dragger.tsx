@@ -19,8 +19,11 @@ const Dragger: FC<DraggerProps> = (props) => {
     )
 
     const handleDrag = (e: DragEvent<HTMLElement>, over: boolean) => {
+
+        console.log('drag');
         // 组织事件的默认行为
         e.preventDefault();
+        e.stopPropagation();
         setDragOver(over);
 
     }
@@ -30,7 +33,10 @@ const Dragger: FC<DraggerProps> = (props) => {
      * @param e 事件类型为 React 提供的拖拽事件，可以接收一个泛型，而原生的拖拽事件不支持传入泛型
      */
     const handleDrop = (e: DragEvent<HTMLElement>) => {
+        console.log('drop');
+        console.log(e.dataTransfer.files);
         e.preventDefault();
+        e.stopPropagation();
         setDragOver(false);
 
         // 调用onFile()
@@ -44,6 +50,7 @@ const Dragger: FC<DraggerProps> = (props) => {
     return (
         <Fragment>
             <div
+                draggable={true}
                 className={kclass}
                 onDragOver={(e) => handleDrag(e, true)}
                 onDragLeave={(e) => handleDrag(e, false)}
