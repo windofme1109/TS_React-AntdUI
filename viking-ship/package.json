@@ -2,6 +2,8 @@
   "name": "viking-ship",
   "version": "0.1.0",
   "private": true,
+  "main": "",
+  "module": "",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.31",
     "@fortawesome/free-solid-svg-icons": "^5.15.0",
@@ -40,6 +42,7 @@
     "storybook": "start-storybook -p 6006 -s public --no-dll",
     "build-storybook": "build-storybook -s public --no-dll"
   },
+  "peerDependencies": {},
   "eslintConfig": {
     "extends": "react-app"
   },
