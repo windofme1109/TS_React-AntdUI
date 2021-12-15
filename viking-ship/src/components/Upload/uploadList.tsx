@@ -29,7 +29,7 @@ const UploadList: FC<UploadListProps> = (props) => {
 
     return (
         <Fragment>
-            <ul className="viking-upload=list">
+            <ul className="viking-upload-list">
                 {fileList.map(item => {
                     return (
                         <li className="viking-upload-list-item" key={item.uid}>
